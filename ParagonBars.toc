@@ -1,0 +1,8 @@
+## Interface: 80300
+## Version: 1.0
+## Title: Paragon Bars
+## Author: Siku
+## Notes: Replace Exalted rep with Paragon progress whenever possible.
+## SavedVariables: ParagonBarsDB
+
+ParagonBars.lua
