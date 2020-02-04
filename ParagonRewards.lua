@@ -291,16 +291,18 @@ end
 
 local function UpdateParagonRewards(frame)
     local rewards = RewardList[frame.factionID]
-    for i = 1, #rewards do
-        rewards[i]:Render(EmbeddedItemTooltip)
+    if rewards and #rewards > 0 then
+        for i = 1, #rewards do
+            rewards[i]:Render(EmbeddedItemTooltip)
+        end
+        
+        if frame.factionID == 2159 or frame.factionID == 2157 then
+            DisplayServiceMedalsRewards()
+        end
+        
+        EmbeddedItemTooltip:AddLine(" ")
+        EmbeddedItemTooltip:Show()
     end
-    
-    if frame.factionID == 2159 or frame.factionID == 2157 then
-        DisplayServiceMedalsRewards()
-    end
-    
-    EmbeddedItemTooltip:AddLine(" ")
-    EmbeddedItemTooltip:Show()
 end
 
 hooksecurefunc("ReputationFrame_Update", UpdateParagonBars)
