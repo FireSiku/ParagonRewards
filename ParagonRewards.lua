@@ -282,8 +282,9 @@ end
 local function DisplayServiceMedalsRewards()
     local faction = UnitFactionGroup("player")
     local rewards = ServiceMedals[faction]
+    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(MEDALS_ID[faction])
     EmbeddedItemTooltip:AddLine(" ")
-    EmbeddedItemTooltip:AddLine(format("%s %s", GetCurrencyInfo(MEDALS_ID[faction]), REWARDS))
+    EmbeddedItemTooltip:AddLine(format("%s %s", currencyInfo.name, REWARDS))
     for i = 1, #rewards do
         rewards[i]:Render(EmbeddedItemTooltip)
     end
