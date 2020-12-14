@@ -171,10 +171,13 @@ local RewardList = {
     [2417] = {
         -- Uldum Accord
         AddReward(PET, {item = 174481, id = 2850}),
+        AddReward(ESSENCE, {item = 173283, id = 35}),
     },
     [2415] = {
         -- Rajani
         AddReward(PET, {item = 174479, id = 2852}),
+        AddReward(ESSENCE, {item = 168816, id = 24}),
+        AddReward(ESSENCE, {item = 168576, id = 33}),
     },
     
     -- Legion Paragons
@@ -307,4 +310,4 @@ local function UpdateParagonRewards(frame)
 end
 
 hooksecurefunc("ReputationFrame_Update", UpdateParagonBars)
-hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards)
+hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards) 
