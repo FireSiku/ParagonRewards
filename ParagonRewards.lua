@@ -85,11 +85,36 @@ end
 ---------------------------------- REWARDS ------------------------------------
 -------------------------------------------------------------------------------
 --To gather ID from mounts and Pets:
---/run local p = "NAME"; for i,m in ipairs(C_MountJournal.GetMountIDs()) do if (C_MountJournal.GetMountInfoByID(m) == p) then print(m,"=",p); end end
---/run local p = "NAME"; print(C_PetJournal.FindPetIDByName(p),"=",p)
+-- function PR_GetPet(name) print(C_PetJournal.FindPetIDByName(name),"=",name) end
+-- function PR_GetMount(name) for i, m in ipairs(C_MountJournal.GetMountIDs()) do
+--     if C_MountJournal.GetMountInfoByID(m) == name then print(m, "=", name) end
+-- end end
 
 local RewardList = {
-    -- Alliance
+    
+    -- Shadowlands Paragon
+    [2407] = {
+        -- The Ascended
+        AddReward(PET, {item = 184399, id = 3064}),
+        AddReward(TOY, {item = 184396}),
+    },
+    [2410] = {
+        -- The Undying Army
+        AddReward(MOUNT, {item = 182081, id = 1350}),
+        AddReward(PET, {item = 181269, id = 2959}),
+        AddReward(TOY, {item = 184495}),
+    },
+    [2413] = {
+        -- Court of Harvesters
+        AddReward(PET, {item = 180601, id = 3006}),
+    },
+    [2465] = {
+        -- The Wild Hunt
+        AddReward(MOUNT, {item = 183800, id = 1428}),
+        AddReward(PET, {item = 180635, id = 2916}),
+    },
+
+    -- BFA Alliance
     [2160] = {
         -- Proudmoore Admiralty
         AddReward(TOY, {item = 166702}),
@@ -120,7 +145,7 @@ local RewardList = {
         AddReward(ESSENCE, {item = 168840, id = 25}),
     },
     
-    -- Horde
+    -- BFA Horde
     [2103] = {
         -- -Zandalari Empire
         AddReward(TOY, {item = 166701}),
@@ -152,7 +177,7 @@ local RewardList = {
         AddReward(ESSENCE, {item = 168840, id = 25}),
     },
     
-    -- Neutral
+    -- BFA Neutral
     [2163] = {
         -- Tortollan Seekers
         AddReward(TOY, {item = 166704}),
