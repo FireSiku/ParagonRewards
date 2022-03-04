@@ -23,7 +23,7 @@ stds["WoW"] = {
 		string = { fields = { "join", "rtgsub", "split", "trim", }},
 		table = { fields = { "removemulti", "wipe", }},
 
-		"format", "Mixin", "Item", "BreakUpLargeNumbers", "EmbeddedItemTooltip", "GetCurrencyInfo", "hooksecurefunc",
+		"format", "Mixin", "Item", "BreakUpLargeNumbers", "EmbeddedItemTooltip", "GetCurrencyInfo", "hooksecurefunc", "GameTooltip",
 		"C_MountJournal", "C_PetJournal", "C_Heirloom", "C_AzeriteEssence", "C_Reputation", "C_CurrencyInfo", "ReputationListScrollFrame",
 		"GetNumFactions", "FauxScrollFrame_GetOffset", "GetFactionInfo", "IsFactionInactive", "PlayerHasToy", "UnitFactionGroup",
 		"MOUNT", "PET", "TOY", "ITEM_QUALITY7_DESC", "AZERITE_ESSENCE_ITEM_TYPE", "ADDON_MISSING", "REWARDS", "REPUTATION_PROGRESS_FORMAT", 

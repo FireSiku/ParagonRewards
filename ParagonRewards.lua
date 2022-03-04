@@ -69,8 +69,8 @@ function RewardMixin:Render(tooltip)
     end
 end
 
-local function AddReward(rtype, data)
-    data.rewardType = rtype
+local function AddReward(rewardType, data)
+    data.rewardType = rewardType
     data.itemLink = RETRIEVING_ITEM_INFO
     data.itemIcon = 'Interface\\Icons\\Inv_misc_questionmark'
     local item = Item:CreateFromItemID(data.item)
@@ -311,10 +311,10 @@ local function DisplayServiceMedalsRewards()
     local faction = UnitFactionGroup("player")
     local rewards = ServiceMedals[faction]
     local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(MEDALS_ID[faction])
-    EmbeddedItemTooltip:AddLine(" ")
-    EmbeddedItemTooltip:AddLine(format("%s %s", currencyInfo.name, REWARDS))
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine(format("%s %s", currencyInfo.name, REWARDS))
     for i = 1, #rewards do
-        rewards[i]:Render(EmbeddedItemTooltip)
+        rewards[i]:Render(GameTooltip)
     end
 end
 
@@ -322,17 +322,17 @@ local function UpdateParagonRewards(frame)
     local rewards = RewardList[frame.factionID]
     if rewards and #rewards > 0 then
         for i = 1, #rewards do
-            rewards[i]:Render(EmbeddedItemTooltip)
+            rewards[i]:Render(GameTooltip)
         end
         
         if frame.factionID == 2159 or frame.factionID == 2157 then
             DisplayServiceMedalsRewards()
         end
         
-        EmbeddedItemTooltip:AddLine(" ")
-        EmbeddedItemTooltip:Show()
+        GameTooltip:AddLine(" ")
+        GameTooltip:Show()
     end
 end
 
 hooksecurefunc("ReputationFrame_Update", UpdateParagonBars)
-hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards) 
+hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards)
