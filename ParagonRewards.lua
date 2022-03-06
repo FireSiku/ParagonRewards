@@ -87,7 +87,8 @@ end
 --To gather ID from mounts and Pets:
 -- function PR_GetPet(name) print(C_PetJournal.FindPetIDByName(name),"=",name) end
 -- function PR_GetMount(name) for i, m in ipairs(C_MountJournal.GetMountIDs()) do
---     if C_MountJournal.GetMountInfoByID(m) == name then print(m, "=", name) end
+--     local mountName = C_MountJournal.GetMountInfoByID(m)
+--     if strfind(mountName, name) then print(m, "=", mountName) end
 -- end end
 
 local RewardList = {
@@ -112,6 +113,27 @@ local RewardList = {
         -- The Wild Hunt
         AddReward(MOUNT, {item = 183800, id = 1428}),
         AddReward(PET, {item = 180635, id = 2916}),
+    },
+    [2432] = {
+        -- Ve'nari
+        AddReward(MOUNT, {item = 186657, id = 1501}),
+        AddReward(PET, {item = 186552, id = 3133}),
+    },
+    [2470] = {
+        -- Death Advance
+        AddReward(MOUNT, {item = 186644, id = 1455}),
+        AddReward(MOUNT, {item = 186649, id = 1508}),
+        AddReward(PET, {item = 186541, id = 3137}),
+    },
+    [2472] = {
+        -- Archivist Codex
+        AddReward(MOUNT, {item = 186641, id = 1454}),
+        AddReward(PET, {item = 186538, id = 3140}),
+    },
+    [2478] = {
+        -- The Enlightened
+        AddReward(MOUNT, {item = 188810, id = 1571}),
+        AddReward(TOY, {item = 190177}),
     },
 
     -- BFA Alliance
