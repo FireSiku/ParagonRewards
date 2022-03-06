@@ -15,6 +15,15 @@ local KNOWN = ITEM_SPELL_KNOWN
 local REWARDS = REWARDS
 
 local MEDALS_ID = {Alliance = 1717, Horde = 1716}
+local CALLINGS = CALLINGS_QUESTS
+
+local ASSAULTS_HEADER = {
+    [63543] = "Necrolord Assault",
+    [63823] = "Night Fae Assault",
+    [63824] = "Kyrian Assault",
+    [64554] = "Venthyr Assault"
+}
+local localizedQuestNames = {}
 
 local function Known() return format('(|cFF00FF00%s|r)', KNOWN) end
 local function Missing() return format('(|cFFFF0000%s|r)', MISSING) end
@@ -292,6 +301,49 @@ local ServiceMedals = {
     },
 }
 
+local CallingRewards = {
+    [2407] = {
+        -- Bastion
+        AddReward(TOY, {item = 187419}),
+    },
+    [2410] = {
+        -- Necrolords
+        AddReward(MOUNT, {item = 184160, id = 1438}),
+        AddReward(MOUNT, {item = 184161, id = 1439}),
+        AddReward(MOUNT, {item = 184162, id = 1440}),
+        AddReward(TOY, {item = 187913}),
+    },
+    [2413] = {
+        -- Court of Harvesters
+        AddReward(TOY, {item = 187512}),
+    },
+    [2465] = {
+        -- The Wild Hunt
+        AddReward(TOY, {item = 187840}),
+    },
+
+}
+
+local AssaultRewards = {
+    -- Necrolord = 63543, NightFae = 63823, Kyrian = 63824, Venthyr = 64554
+    [63543] = {
+        AddReward(MOUNT, {item = 186103, id = 1477}),
+        AddReward(PET, {item = 185992, id = 3114}),
+    },
+    [63823] = {
+        AddReward(MOUNT, {item = 186000, id = 1476}),
+        AddReward(PET, {item = 186547, id = 3116}),
+    },
+    [63824] = {
+        AddReward(PET, {item = 186546, id = 3103}),
+        AddReward(TOY, {item = 187185}),
+    },
+    [64554] = {
+        AddReward(MOUNT, {item = 185996, id = 1378}),
+    },
+
+}
+
 -------------------------------------------------------------------------------
 --------------------------------- REPUTATION ----------------------------------
 -------------------------------------------------------------------------------
@@ -340,6 +392,31 @@ local function DisplayServiceMedalsRewards()
     end
 end
 
+local function DisplayCovenantCallings(faction)
+    local rewards = CallingRewards[faction]
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine(format("%s %s", CALLINGS, REWARDS))
+    for i = 1, #rewards do
+        rewards[i]:Render(GameTooltip)
+    end
+end
+
+local function DisplayCovenantAssaults()
+    GameTooltip:AddLine(" ")
+    for id, name in pairs(ASSAULTS_HEADER) do
+        local rewards = AssaultRewards[id]
+        
+        if not localizedQuestNames[id] then
+            local title = C_QuestLog.GetTitleForQuestID(id)
+            if title then localizedQuestNames[id] = title end
+        end
+        GameTooltip:AddLine(localizedQuestNames[id] or name)
+        for i = 1, #rewards do
+            rewards[i]:Render(GameTooltip)
+        end
+    end
+end
+
 local function UpdateParagonRewards(frame)
     local rewards = RewardList[frame.factionID]
     if rewards and #rewards > 0 then
@@ -349,6 +426,10 @@ local function UpdateParagonRewards(frame)
         
         if frame.factionID == 2159 or frame.factionID == 2157 then
             DisplayServiceMedalsRewards()
+        elseif frame.factionID == 2470 then
+            DisplayCovenantAssaults()
+        elseif frame.factionID == 2407 or frame.factionID == 2410 or frame.factionID == 2413 or frame.factionID == 2465 then
+            DisplayCovenantCallings(frame.factionID)
         end
         
         GameTooltip:AddLine(" ")
