@@ -358,26 +358,22 @@ local function GetParagonBarValues(factionID)
     end
 end
 
-local function UpdateParagonBars()
-    local numFactions = GetNumFactions()
-    local factionOffset = FauxScrollFrame_GetOffset(ReputationListScrollFrame)
-    for i=1, NUM_FACTIONS_DISPLAYED, 1 do
-        local factionIndex = factionOffset + i;
-        local factionRow = _G["ReputationBar"..i];
-        local factionBar = _G["ReputationBar"..i.."ReputationBar"];
-        local factionStanding = _G["ReputationBar"..i.."ReputationBarFactionStanding"];
-        if ( factionIndex <= numFactions ) then
-            local _, _, _, _, _, _, _, _, _, _, _, _, _, factionID = GetFactionInfo(factionIndex);
-            if ( factionID and C_Reputation.IsFactionParagon(factionID) and not IsFactionInactive(factionIndex) ) then
-                local barValue, barMax = GetParagonBarValues(factionID)
-                factionBar:SetMinMaxValues(0, barMax)
-                factionBar:SetValue(barValue)
-                factionRow.standingText = "Paragon"
-                factionStanding:SetText("Paragon")
-                local progressFormat = format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue), BreakUpLargeNumbers(barMax))
-                factionRow.rolloverText = HIGHLIGHT_FONT_COLOR_CODE.." "..progressFormat..FONT_COLOR_CODE_CLOSE
-            end
-        end
+local function UpdateParagonBars(factionRow, elementData)
+    -- LUI:PrintTable(factionRow)
+    -- LUI:PrintTable(elementData)
+    local factionContainer = factionRow.Container
+    local factionBar = factionContainer.ReputationBar
+    local factionStanding = factionBar.FactionStanding
+    local factionIndex = elementData.index
+    local name, _, standingID, barMin, barMax, barValue, _, _, _, _, hasRep, isWatched, isChild, factionID = GetFactionInfo(factionIndex);
+    if ( factionID and C_Reputation.IsFactionParagon(factionID) and not IsFactionInactive(factionIndex) ) then
+        local barValue, barMax = GetParagonBarValues(factionID)
+        factionBar:SetMinMaxValues(0, barMax)
+        factionBar:SetValue(barValue)
+        factionRow.standingText = "Paragon"
+        factionStanding:SetText("Paragon")
+        local progressFormat = format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue), BreakUpLargeNumbers(barMax))
+        factionRow.rolloverText = HIGHLIGHT_FONT_COLOR_CODE.." "..progressFormat..FONT_COLOR_CODE_CLOSE
     end
 end
 
@@ -437,5 +433,5 @@ local function UpdateParagonRewards(frame)
     end
 end
 
-hooksecurefunc("ReputationFrame_Update", UpdateParagonBars)
+hooksecurefunc("ReputationFrame_InitReputationRow", UpdateParagonBars)
 hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards)
