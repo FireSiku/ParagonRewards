@@ -25,12 +25,20 @@ local ASSAULTS_HEADER = {
 }
 local localizedQuestNames = {}
 
-local function Known() return format('(|cFF00FF00%s|r)', KNOWN) end
-local function Missing() return format('(|cFFFF0000%s|r)', MISSING) end
+local function Known() return string.format('(|cFF00FF00%s|r)', KNOWN) end
+local function Missing() return string.format('(|cFFFF0000%s|r)', MISSING) end
 
 -------------------------------------------------------------------------------
 ----------------------------------- Mixin -------------------------------------
 -------------------------------------------------------------------------------
+
+---@class Reward
+---@field rewardType string
+---@field cost number @ If given, will be listed next to reward type.
+---@field itemLink string
+---@field itemIcon number
+---@field item number @ ItemID of the item giving the reward
+---@field id number @ Type-specific ID to check if reward has been collected
 local RewardMixin = {}
 
 function RewardMixin:IsCollected()
@@ -53,6 +61,8 @@ function RewardMixin:IsCollected()
     end
 end
 
+--- Find if a character can use a given reward.
+---@return boolean
 function RewardMixin:IsUsable()
     if self.rewardType == ESSENCE then
         local info = C_AzeriteEssence.GetEssenceInfo(self.id)
@@ -64,11 +74,13 @@ end
 
 function RewardMixin:GetRewardText()
     if self.cost then
-        return format("%s (%s, %d)", self.itemLink, self.rewardType, self.cost)
+        return string.format("%s (%s, %d)", self.itemLink, self.rewardType, self.cost)
     end
-    return format("%s (%s)", self.itemLink, self.rewardType)
+    return string.format("%s (%s)", self.itemLink, self.rewardType)
 end
 
+--- Main function to turn the Reward data into user-facing text.
+---@param tooltip GameTooltip
 function RewardMixin:Render(tooltip)
     if self:IsUsable() then
         local collected = self:IsCollected()
@@ -78,6 +90,10 @@ function RewardMixin:Render(tooltip)
     end
 end
 
+--- Reward constructor
+---@param rewardType string
+---@param data table
+---@return Reward
 local function AddReward(rewardType, data)
     data.rewardType = rewardType
     data.itemLink = RETRIEVING_ITEM_INFO
@@ -359,20 +375,18 @@ local function GetParagonBarValues(factionID)
 end
 
 local function UpdateParagonBars(factionRow, elementData)
-    -- LUI:PrintTable(factionRow)
-    -- LUI:PrintTable(elementData)
     local factionContainer = factionRow.Container
     local factionBar = factionContainer.ReputationBar
     local factionStanding = factionBar.FactionStanding
     local factionIndex = elementData.index
-    local name, _, standingID, barMin, barMax, barValue, _, _, _, _, hasRep, isWatched, isChild, factionID = GetFactionInfo(factionIndex);
+    local factionID = select(14, GetFactionInfo(factionIndex))
     if ( factionID and C_Reputation.IsFactionParagon(factionID) and not IsFactionInactive(factionIndex) ) then
         local barValue, barMax = GetParagonBarValues(factionID)
         factionBar:SetMinMaxValues(0, barMax)
         factionBar:SetValue(barValue)
         factionRow.standingText = "Paragon"
         factionStanding:SetText("Paragon")
-        local progressFormat = format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue), BreakUpLargeNumbers(barMax))
+        local progressFormat = string.format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue), BreakUpLargeNumbers(barMax))
         factionRow.rolloverText = HIGHLIGHT_FONT_COLOR_CODE.." "..progressFormat..FONT_COLOR_CODE_CLOSE
     end
 end
@@ -382,7 +396,7 @@ local function DisplayServiceMedalsRewards()
     local rewards = ServiceMedals[faction]
     local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(MEDALS_ID[faction])
     GameTooltip:AddLine(" ")
-    GameTooltip:AddLine(format("%s %s", currencyInfo.name, REWARDS))
+    GameTooltip:AddLine(string.format("%s %s", currencyInfo.name, REWARDS))
     for i = 1, #rewards do
         rewards[i]:Render(GameTooltip)
     end
@@ -391,7 +405,7 @@ end
 local function DisplayCovenantCallings(faction)
     local rewards = CallingRewards[faction]
     GameTooltip:AddLine(" ")
-    GameTooltip:AddLine(format("%s %s", CALLINGS, REWARDS))
+    GameTooltip:AddLine(string.format("%s %s", CALLINGS, REWARDS))
     for i = 1, #rewards do
         rewards[i]:Render(GameTooltip)
     end

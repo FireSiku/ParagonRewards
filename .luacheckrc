@@ -23,10 +23,15 @@ stds["WoW"] = {
 		string = { fields = { "join", "rtgsub", "split", "trim", }},
 		table = { fields = { "removemulti", "wipe", }},
 
-		"format", "Mixin", "Item", "BreakUpLargeNumbers", "EmbeddedItemTooltip", "GetCurrencyInfo", "hooksecurefunc", "GameTooltip",
-		"C_MountJournal", "C_PetJournal", "C_Heirloom", "C_AzeriteEssence", "C_Reputation", "C_CurrencyInfo", "ReputationListScrollFrame",
-		"GetNumFactions", "FauxScrollFrame_GetOffset", "GetFactionInfo", "IsFactionInactive", "PlayerHasToy", "UnitFactionGroup",
-		"MOUNT", "PET", "TOY", "ITEM_QUALITY7_DESC", "AZERITE_ESSENCE_ITEM_TYPE", "ADDON_MISSING", "REWARDS", "REPUTATION_PROGRESS_FORMAT", 
-		"RETRIEVING_ITEM_INFO", "NUM_FACTIONS_DISPLAYED", "FONT_COLOR_CODE_CLOSE", "HIGHLIGHT_FONT_COLOR_CODE", "ITEM_SPELL_KNOWN",
+		-- Localized Strings
+		"CALLINGS_QUESTS", "MOUNT", "PET", "TOY", "ITEM_QUALITY7_DESC", "AZERITE_ESSENCE_ITEM_TYPE", "ADDON_MISSING", "REWARDS", "REPUTATION_PROGRESS_FORMAT",
+		"RETRIEVING_ITEM_INFO", "FONT_COLOR_CODE_CLOSE", "HIGHLIGHT_FONT_COLOR_CODE", "ITEM_SPELL_KNOWN",
+
+		-- Namespaces
+		"C_PetJournal", "C_MountJournal", "C_Heirloom", "C_AzeriteEssence", "C_Reputation", "C_CurrencyInfo", "C_GossipInfo", "C_QuestLog",
+
+		-- Global API
+		"hooksecurefunc", "Mixin", "Item", "GameTooltip", "BreakUpLargeNumbers", "PlayerHasToy",
+		"GetNumFactions", "GetFactionInfo", "IsFactionInactive", "UnitFactionGroup",
 	}
 }
