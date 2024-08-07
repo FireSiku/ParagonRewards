@@ -25,8 +25,18 @@ local ASSAULTS_HEADER = {
 }
 local localizedQuestNames = {}
 
+local renderTooltip = ReputationParagonFrame_SetupParagonTooltip
+
 local function Known() return string.format('(|cFF00FF00%s|r)', KNOWN) end
 local function Missing() return string.format('(|cFFFF0000%s|r)', MISSING) end
+
+local function GetWatchedFactionInfo()
+	local data = C_Reputation.GetWatchedFactionData()
+	if not data then return end
+
+	return data.name, data.reaction, data.currentReactionThreshold, data.currentStanding, data.nextReactionThreshold, data.factionID
+end
+
 
 -------------------------------------------------------------------------------
 ----------------------------------- Mixin -------------------------------------
@@ -86,7 +96,7 @@ function RewardMixin:Render(tooltip)
         local collected = self:IsCollected()
         local status = collected and Known() or Missing()
         tooltip:AddDoubleLine(self:GetRewardText(), status)
-        tooltip:AddTexture(self.itemIcon, {margin={left=10, top=2, right=2}})
+        tooltip:AddTexture(self.itemIcon) --  {margin={left=10, top=2, right=2}}
     end
 end
 
@@ -363,6 +373,7 @@ local AssaultRewards = {
 -------------------------------------------------------------------------------
 --------------------------------- REPUTATION ----------------------------------
 -------------------------------------------------------------------------------
+
 local function GetParagonBarValues(factionID)
     local currentValue, rewardThreshold, _,  rewardPending = C_Reputation.GetFactionParagonInfo(factionID)
     currentValue = (currentValue - rewardThreshold) % rewardThreshold
@@ -391,28 +402,28 @@ local function UpdateParagonBars(factionRow, elementData)
     end
 end
 
-local function DisplayServiceMedalsRewards()
+local function DisplayServiceMedalsRewards(tooltip)
     local faction = UnitFactionGroup("player")
     local rewards = ServiceMedals[faction]
     local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(MEDALS_ID[faction])
-    GameTooltip:AddLine(" ")
-    GameTooltip:AddLine(string.format("%s %s", currencyInfo.name, REWARDS))
+    tooltip:AddLine(" ")
+    tooltip:AddLine(string.format("%s %s", currencyInfo.name, REWARDS))
     for i = 1, #rewards do
-        rewards[i]:Render(GameTooltip)
+        rewards[i]:Render(tooltip)
     end
 end
 
-local function DisplayCovenantCallings(faction)
+local function DisplayCovenantCallings(tooltip, faction)
     local rewards = CallingRewards[faction]
-    GameTooltip:AddLine(" ")
-    GameTooltip:AddLine(string.format("%s %s", CALLINGS, REWARDS))
+    tooltip:AddLine(" ")
+    tooltip:AddLine(string.format("%s %s", CALLINGS, REWARDS))
     for i = 1, #rewards do
-        rewards[i]:Render(GameTooltip)
+        rewards[i]:Render(tooltip)
     end
 end
 
-local function DisplayCovenantAssaults()
-    GameTooltip:AddLine(" ")
+local function DisplayCovenantAssaults(tooltip)
+    tooltip:AddLine(" ")
     for id, name in pairs(ASSAULTS_HEADER) do
         local rewards = AssaultRewards[id]
         
@@ -420,32 +431,33 @@ local function DisplayCovenantAssaults()
             local title = C_QuestLog.GetTitleForQuestID(id)
             if title then localizedQuestNames[id] = title end
         end
-        GameTooltip:AddLine(localizedQuestNames[id] or name)
+        tooltip:AddLine(localizedQuestNames[id] or name)
         for i = 1, #rewards do
-            rewards[i]:Render(GameTooltip)
+            rewards[i]:Render(tooltip)
         end
     end
 end
 
 local function UpdateParagonRewards(frame)
+    local tooltip = EmbeddedItemTooltip
     local rewards = RewardList[frame.factionID]
     if rewards and #rewards > 0 then
         for i = 1, #rewards do
-            rewards[i]:Render(GameTooltip)
+            rewards[i]:Render(tooltip)
         end
         
         if frame.factionID == 2159 or frame.factionID == 2157 then
-            DisplayServiceMedalsRewards()
+            DisplayServiceMedalsRewards(tooltip)
         elseif frame.factionID == 2470 then
-            DisplayCovenantAssaults()
+            DisplayCovenantAssaults(tooltip)
         elseif frame.factionID == 2407 or frame.factionID == 2410 or frame.factionID == 2413 or frame.factionID == 2465 then
-            DisplayCovenantCallings(frame.factionID)
+            DisplayCovenantCallings(tooltip, frame.factionID)
         end
         
-        GameTooltip:AddLine(" ")
-        GameTooltip:Show()
+        GameTooltip_AddBlankLineToTooltip(tooltip)
+        tooltip:Show()
     end
 end
 
-hooksecurefunc("ReputationFrame_InitReputationRow", UpdateParagonBars)
+--hooksecurefunc(ReputationStatusBar, "Update", UpdateParagonBars)
 hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards)
