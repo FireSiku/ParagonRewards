@@ -385,23 +385,6 @@ local function GetParagonBarValues(factionID)
     end
 end
 
-local function UpdateParagonBars(factionRow, elementData)
-    local factionContainer = factionRow.Container
-    local factionBar = factionContainer.ReputationBar
-    local factionStanding = factionBar.FactionStanding
-    local factionIndex = elementData.index
-    local factionID = select(14, GetFactionInfo(factionIndex))
-    if ( factionID and C_Reputation.IsFactionParagon(factionID) and not IsFactionInactive(factionIndex) ) then
-        local barValue, barMax = GetParagonBarValues(factionID)
-        factionBar:SetMinMaxValues(0, barMax)
-        factionBar:SetValue(barValue)
-        factionRow.standingText = "Paragon"
-        factionStanding:SetText("Paragon")
-        local progressFormat = string.format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue), BreakUpLargeNumbers(barMax))
-        factionRow.rolloverText = HIGHLIGHT_FONT_COLOR_CODE.." "..progressFormat..FONT_COLOR_CODE_CLOSE
-    end
-end
-
 local function DisplayServiceMedalsRewards(tooltip)
     local faction = UnitFactionGroup("player")
     local rewards = ServiceMedals[faction]
@@ -459,5 +442,21 @@ local function UpdateParagonRewards(frame)
     end
 end
 
---hooksecurefunc(ReputationStatusBar, "Update", UpdateParagonBars)
+--- Update the Paragon Bars
+---@param entry ReputationEntryMixin
+local function UpdateNewParagonBars(entry)
+    local factionBar = entry.Content.ReputationBar
+    local factionID = entry.factionID
+    local factionIndex = entry.factionIndex
+    if ( factionID and C_Reputation.IsFactionParagon(factionID) and C_Reputation.IsFactionActive(factionIndex) ) then
+        local barValue, barMax = GetParagonBarValues(factionID)
+        factionBar:SetMinMaxValues(0, barMax)
+        factionBar:SetValue(barValue)
+        factionBar.barProgressText = string.format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue), BreakUpLargeNumbers(barMax))
+        factionBar.reputationStandingText = "Paragon"
+    end
+end
+
+hooksecurefunc(ReputationEntryMixin, "TryInitParagonDisplay", UpdateNewParagonBars)
+hooksecurefunc(ReputationSubHeaderMixin, "TryInitParagonDisplay", UpdateNewParagonBars)
 hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip", UpdateParagonRewards)
