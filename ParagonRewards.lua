@@ -1,21 +1,22 @@
 --local addonname, ns = ...
 
 -- Reward Types
-local MOUNT = MOUNT
-local PET = PET
-local TOY = TOY
-local HEIRLOOM = ITEM_QUALITY7_DESC
-local ESSENCE = AZERITE_ESSENCE_ITEM_TYPE
+local MOUNT = MOUNT or "Mount"
+local PET = PET or "Pet"
+local TOY = TOY or "Toy"
+local HEIRLOOM = ITEM_QUALITY7_DESC or "Heirloom"
+local ESSENCE = AZERITE_ESSENCE_ITEM_TYPE or "Essence"
 -- --local RECIPE = TRANSMOG_SOURCE_6
 
 -- Others
-local RETRIEVING_ITEM_INFO = RETRIEVING_ITEM_INFO
-local MISSING = ADDON_MISSING
-local KNOWN = ITEM_SPELL_KNOWN
-local REWARDS = REWARDS
+local REPUTATION_PROGRESS_FORMAT = REPUTATION_PROGRESS_FORMAT or "%s / %s"
+local RETRIEVING_ITEM_INFO = RETRIEVING_ITEM_INFO or "Retrieving item information"
+local MISSING = ADDON_MISSING or "Missing"
+local KNOWN = ITEM_SPELL_KNOWN or "Already Known"
+local REWARDS = REWARDS or "Rewards"
 
 local MEDALS_ID = {Alliance = 1717, Horde = 1716}
-local CALLINGS = CALLINGS_QUESTS
+local CALLINGS = CALLINGS_QUESTS or "Callings"
 
 local ASSAULTS_HEADER = {
     [63543] = "Necrolord Assault",
@@ -25,18 +26,8 @@ local ASSAULTS_HEADER = {
 }
 local localizedQuestNames = {}
 
-local renderTooltip = ReputationParagonFrame_SetupParagonTooltip
-
 local function Known() return string.format('(|cFF00FF00%s|r)', KNOWN) end
 local function Missing() return string.format('(|cFFFF0000%s|r)', MISSING) end
-
-local function GetWatchedFactionInfo()
-	local data = C_Reputation.GetWatchedFactionData()
-	if not data then return end
-
-	return data.name, data.reaction, data.currentReactionThreshold, data.currentStanding, data.nextReactionThreshold, data.factionID
-end
-
 
 -------------------------------------------------------------------------------
 ----------------------------------- Mixin -------------------------------------
@@ -44,11 +35,11 @@ end
 
 ---@class Reward
 ---@field rewardType string
----@field cost number @ If given, will be listed next to reward type.
+---@field cost number # If given, will be listed next to reward type.
 ---@field itemLink string
 ---@field itemIcon number
----@field item number @ ItemID of the item giving the reward
----@field id number @ Type-specific ID to check if reward has been collected
+---@field item number # ItemID of the item giving the reward
+---@field id number # Type-specific ID to check if reward has been collected
 local RewardMixin = {}
 
 function RewardMixin:IsCollected()
